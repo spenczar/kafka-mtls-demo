@@ -1,0 +1,38 @@
+---
+version: '2'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.5.0
+    hostname: zookeeper
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    logging:
+      driver: none
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  broker:
+    image: wurstmeister/kafka:latest
+    hostname: broker
+    container_name: broker
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./broker_mount:/mnt/shared
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_ADVERTISED_HOST_NAME: localhost
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092,SSL://:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,SSL://0.0.0.0:9093
+      KAFKA_SSL_CLIENT_AUTH: 'requested'
+      KAFKA_SSL_TRUSTSTORE_LOCATION: /mnt/shared/broker.server.truststore.jks
+      KAFKA_SSL_TRUSTSTORE_PASSWORD: abcdefgh
+      KAFKA_SSL_KEYSTORE_LOCATION: /mnt/shared/broker.server.keystore.jks
+      KAFKA_SSL_KEYSTORE_PASSWORD: abcdefgh
+      KAFKA_SSL_KEY_PASSWORD: abcdefgh
