@@ -10,7 +10,7 @@ SERVER_TRUST_STORE_PASS=abcdefgh
 
 # Add the cert to the trust store for the server
 keytool -keystore $SERVER_TRUST_STORE \
-        -alias $CLIENT_USERNAME.client \
+        -alias client.$CLIENT_USERNAME \
         -storepass $SERVER_TRUST_STORE_PASS \
         -import \
         -file $CERTFILE

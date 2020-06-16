@@ -15,7 +15,7 @@ services:
 
   broker:
     image: wurstmeister/kafka:latest
-    hostname: broker
+    hostname: localhost
     container_name: broker
     depends_on:
       - zookeeper
