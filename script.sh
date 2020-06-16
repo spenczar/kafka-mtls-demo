@@ -6,24 +6,25 @@ wait_for_enter() {
     $@
 }
 
-# echo "Clean up any docker remnants from previous runs"
-# wait_for_enter docker-compose rm
-# wait_for_enter rm -rf './broker_mount/*'
+echo "Clean up any docker remnants from previous runs"
+wait_for_enter docker-compose rm
+wait_for_enter rm -rf './broker_mount/*'
 
-# echo "Make TLS certs for the broker side"
-# cd ./broker_mount
-# wait_for_enter ../gen_server_tls.sh ca ca-cert localhost
-# echo ""
-# wait_for_enter ../gen_server_tls.sh server ca-cert broker. localhost
-# cd ../
+echo "Make TLS certs for the broker side"
+mkdir -p ./broker_mount
+cd ./broker_mount
+wait_for_enter ../gen_server_tls.sh ca ca-cert localhost
+echo ""
+wait_for_enter ../gen_server_tls.sh server ca-cert broker. localhost
+cd ../
 
-# echo "Bring up Kafka broker and zookeeper"
-# wait_for_enter 'docker-compose up &'
+echo "Bring up Kafka broker and zookeeper"
+wait_for_enter 'docker-compose up &'
 
-# echo "Run Go server"
-# wait_for_enter go run main.go &
+echo "Run Go server"
+wait_for_enter go run main.go &
 
-echo "Open Go auth server in browser"
+echo "Open Go auth server in browser and create a user named 'spencer'"
 wait_for_enter firefox http://localhost:8080/
 
 echo "Copy credentials over here"
